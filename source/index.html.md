@@ -3,13 +3,9 @@ title: API Reference
 
 language_tabs: # must be one of https://git.io/vQNgJ
   - shell
-  - ruby
-  - python
-  - javascript
 
 toc_footers:
-  - <a href='#'>Sign Up for a Developer Key</a>
-  - <a href='https://github.com/slatedocs/slate'>Documentation Powered by Slate</a>
+  - <a href='http://app.scripla.com'>Sign Up for an Account</a>
 
 includes:
   - errors
@@ -21,221 +17,177 @@ code_clipboard: true
 
 # Introduction
 
-Welcome to the Kittn API! You can use our API to access Kittn API endpoints, which can get information on various cats, kittens, and breeds in our database.
-
-We have language bindings in Shell, Ruby, Python, and JavaScript! You can view code examples in the dark area to the right, and you can switch the programming language of the examples with the tabs in the top right.
-
-This example API documentation page was created with [Slate](https://github.com/slatedocs/slate). Feel free to edit it and use it as a base for your own API's documentation.
+This is a very early version of the external Scripla API. The endpoints may change without notice. Please contact support@scripla.com with any questions. Examples given here are just examples and will take some tweaking to work for your specific needs.
 
 # Authentication
 
 > To authorize, use this code:
 
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-```
-
 ```shell
-# With shell, you can just pass the correct header with each request
+# With shell, you can just pass Basic Auth with each request
 curl "api_endpoint_here" \
   -H "Authorization: meowmeowmeow"
 ```
 
-```javascript
-const kittn = require('kittn');
+> Make sure to use your real user name and password.
 
-let api = kittn.authorize('meowmeowmeow');
-```
+Scripla allows for partial access to it's data via API endpoints. For most usages you can simply pass in BASIC HTTP Authorization using your user name and password.
 
-> Make sure to replace `meowmeowmeow` with your API key.
-
-Kittn uses API keys to allow access to the API. You can register a new Kittn API key at our [developer portal](http://example.com/developers).
-
-Kittn expects for the API key to be included in all API requests to the server in a header that looks like the following:
-
-`Authorization: meowmeowmeow`
+`curl --basic --user coteyr@coteyr.net:delete http://myc.vpn.coteyr.net/users/1.json
+`
 
 <aside class="notice">
-You must replace <code>meowmeowmeow</code> with your personal API key.
+You must use your user name and password from your account. Make sure to properly set accepts headers. Currently we can return data in JSON.
 </aside>
 
-# Kittens
+# Users
 
-## Get All Kittens
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get()
-```
+## Get A User's Information
 
 ```shell
-curl "http://example.com/api/kittens" \
-  -H "Authorization: meowmeowmeow"
+curl --basic --user coteyr@coteyr.net:delete http://myc.vpn.coteyr.net/users/1.json
 ```
 
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let kittens = api.kittens.get();
-```
 
 > The above command returns JSON structured like this:
 
 ```json
-[
-  {
-    "id": 1,
-    "name": "Fluffums",
-    "breed": "calico",
-    "fluffiness": 6,
-    "cuteness": 7
-  },
-  {
-    "id": 2,
-    "name": "Max",
-    "breed": "unknown",
-    "fluffiness": 5,
-    "cuteness": 10
-  }
-]
+{
+    "id":1,
+    "login":"coteyr@coteyr.net",
+    "name":"Robert Cotey",
+    "email":"coteyr@coteyr.net",
+    "created_at":"2020-10-14T21:46:50.000Z",
+    "updated_at":"2020-12-23T19:50:42.000Z",
+    "remember_token":null,
+    "remember_token_expires_at":null,
+    "first_name":"Robert",
+    "last_name":"Cotey",
+    "avatar":{
+        "url":"/default_avatar.png",
+        "small":{"url":"/default_avatar.png"},
+        "mid":{"url":"/default_avatar.png"},
+        "large":{"url":"/default_avatar.png"}
+    },
+    "user_type":"explorer",
+    "profile_photo":{
+        "url":null,
+        "small":{"url":null},
+        "mid":{"url":null},
+        "large":{"url":null}
+    },
+    "bible_id":1,
+    "birthday":null,
+    "admin":false,
+    "vetted":true
+}
+
 ```
 
-This endpoint retrieves all kittens.
+This endpoint retrieves a single users information. There is no way to return a list of all users.
 
 ### HTTP Request
 
-`GET http://example.com/api/kittens`
+`GET /users/:id`
 
 ### Query Parameters
 
 Parameter | Default | Description
 --------- | ------- | -----------
-include_cats | false | If set to true, the result will also include cats.
-available | true | If set to false, the result will include kittens that have already been adopted.
+id | false | The id if the user to retrieve
+
 
 <aside class="success">
-Remember — a happy kitten is an authenticated kitten!
+You will only be able to see users that you (the logged in user) would otherwise be able to see. There is no call to see all users, instead use this call along with the contributions to get that profiles details.
 </aside>
 
-## Get a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.get(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.get(2)
-```
+## Create a user (sign up)
 
 ```shell
-curl "http://example.com/api/kittens/2" \
-  -H "Authorization: meowmeowmeow"
+curl http://myc.vpn.coteyr.net/users.json \
+--form "user[passsword]=demopass"  \
+--form "user[bible_id]=1" \
+--form "user[user_type]=explorer" \
+--form "user[email]=apidemo1@scripla.com" \
+--form "user[avatar_new]=@/home/coteyr/P1000086.JPG" \
+--form "user[last_name]=User" \
+--form "user[first_name]=Test" \
+--form "user[password_confirmation]=demopass"
+
 ```
 
-```javascript
-const kittn = require('kittn');
 
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.get(2);
-```
-
-> The above command returns JSON structured like this:
+> The above command returns JSON structured like this on failure:
 
 ```json
 {
-  "id": 2,
-  "name": "Max",
-  "breed": "unknown",
-  "fluffiness": 5,
-  "cuteness": 10
-}
+    "password":["can't be blank","is too short (minimum is 6 characters)"],
+    "password_confirmation":["can't be blank"],
+    "login":["can't be blank","is too short (minimum is 3 characters)","use only letters, numbers, and .-_@ please."],
+    "first_name":["can't be blank"],
+    "last_name":["can't be blank"],
+    "avatar_new":["must supply an avatar"],
+    "bible_id":["can't be blank"],
+    "email":["can't be blank","should look like an email address.","is too short (minimum is 6 characters)"],
+    "bible":["must exist"],
+    "user_type":["can't be blank","is not included in the list"]}
+
 ```
-
-This endpoint retrieves a specific kitten.
-
-<aside class="warning">Inside HTML code blocks like this one, you can't use Markdown, so use <code>&lt;code&gt;</code> blocks to denote code.</aside>
-
-### HTTP Request
-
-`GET http://example.com/kittens/<ID>`
-
-### URL Parameters
-
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to retrieve
-
-## Delete a Specific Kitten
-
-```ruby
-require 'kittn'
-
-api = Kittn::APIClient.authorize!('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```python
-import kittn
-
-api = kittn.authorize('meowmeowmeow')
-api.kittens.delete(2)
-```
-
-```shell
-curl "http://example.com/api/kittens/2" \
-  -X DELETE \
-  -H "Authorization: meowmeowmeow"
-```
-
-```javascript
-const kittn = require('kittn');
-
-let api = kittn.authorize('meowmeowmeow');
-let max = api.kittens.delete(2);
-```
-
-> The above command returns JSON structured like this:
+> The above command returns JSON structured like this on success:
 
 ```json
 {
-  "id": 2,
-  "deleted" : ":("
+    "id":8,
+    "login":"apidemo1@scripla.com",
+    "name":"Test User",
+    "email":"apidemo1@scripla.com",
+    "created_at":"2020-12-23T22:00:37.000Z",
+    "updated_at":"2020-12-23T22:00:37.000Z",
+    "remember_token":null,
+    "remember_token_expires_at":null,
+    "first_name":"Test",
+    "last_name":"User",
+    "avatar":{
+        "url":"/default_avatar.png",
+        "small":{"url":"/default_avatar.png"},
+        "mid":{"url":"/default_avatar.png"},
+        "large":{"url":"/default_avatar.png"}
+    },
+    "user_type":"explorer",
+    "profile_photo":{
+        "url":null,
+        "small":{"url":null},
+        "mid":{"url":null},
+        "large":{"url":null}
+    },
+    "google_auth":null,
+    "bible_id":1,
+    "birthday":null,
 }
-```
 
-This endpoint deletes a specific kitten.
+```
+It's important to store the user's ID locally, other then logging back in there is no way to get the id again. 
 
 ### HTTP Request
 
-`DELETE http://example.com/kittens/<ID>`
+`POST /users/`
 
-### URL Parameters
+### Query Parameters
 
-Parameter | Description
---------- | -----------
-ID | The ID of the kitten to delete
+Parameter | Default | Description
+--------- | ------- | -----------
+password|null|
+bible_id|null|set to 1|
+user_type|null|explorer or creator
+email|null| 
+password|null| 
+password_confirmation|null|must match password
+avatar_new|null|any image type, square is better
+
+
+
+<aside class="warning">
+Make sure to store the user id locally, the id will not be presented again. 
+</aside>
+
 
