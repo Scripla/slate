@@ -33,7 +33,7 @@ curl "api_endpoint_here" \
 
 Scripla allows for partial access to it's data via API endpoints. For most usages you can simply pass in BASIC HTTP Authorization using your user name and password.
 
-`curl --basic --user coteyr@coteyr.net:delete http://myc.vpn.coteyr.net/users/1.json
+`curl --basic --user user@example.com:m4p@55w0rd http://app.scripla.com/users/1.json
 `
 
 <aside class="notice">
@@ -45,7 +45,7 @@ You must use your user name and password from your account. Make sure to properl
 ## Get A User's Information
 
 ```shell
-curl --basic --user coteyr@coteyr.net:delete http://myc.vpn.coteyr.net/users/1.json
+curl --basic --user user@example.com:m4p@55w0rd http://app.scripla.com/users/1.json
 ```
 
 
@@ -104,7 +104,7 @@ You will only be able to see users that you (the logged in user) would otherwise
 ## Create a user (sign up)
 
 ```shell
-curl http://myc.vpn.coteyr.net/users.json \
+curl http://app.scripla.com/users.json \
 --form "user[passsword]=demopass"  \
 --form "user[bible_id]=1" \
 --form "user[user_type]=explorer" \
